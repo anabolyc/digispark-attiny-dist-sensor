@@ -1,6 +1,13 @@
 ## digispark-attiny-dist-sensor
 
-WIP
+### Hardware
+
+Digispark Attiny85 board with Micronucleos core
+Flash included ino file
+Distance sensor included
+
+### Software
+When object is present in front of sensor - display is swithed on. When object moved away - display is switched off.
 
 ## Prerequisites
 
