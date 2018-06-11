@@ -4,21 +4,40 @@
 # Written for PyUSB 1.0 (w/libusb 1.0.3)
 
 import usb # 1.0 not 0.4
-
-
+import os
 import sys
 sys.path.append("..")
+
 
 from arduino.usbdevice import ArduinoUsbDevice
 from subprocess import call
 
+WIN_SCREEN_ON = -1
+WIN_SCREEN_SLEEP = 1
+WIN_SCREEN_OFF = 2
+WIN_SC_MONITORPOWER = 0xF170
+
+def screen_state_win(state):
+    import win32gui
+    import win32con
+    win32gui.SendMessage(win32con.HWND_BROADCAST, win32con.WM_SYSCOMMAND, WIN_SC_MONITORPOWER, state)   
+
 def screen_on():
     sys.stdout.write(" ON")
-    call(["xset", "dpms", "force", "on"])
+    if sys.platform.startswith('linux'):
+        os.system("xset dpms force on")
+    elif sys.platform.startswith('win'):
+        screen_state_win(WIN_SCREEN_ON)
 
 def screen_off():
     sys.stdout.write(" OFF")
-    call(["xset", "dpms", "force", "off"])
+    if sys.platform.startswith('linux'):
+        os.system("xset dpms force off")
+    elif sys.platform.startswith('win'):
+        screen_state_win(WIN_SCREEN_OFF)
+    #elif sys.platform.startswith('darwin'):
+    #    import subprocess
+    #    subprocess.call('echo \'tell application "Finder" to sleep\' | osascript', shell=True)
 
 if __name__ == "__main__":
     try:
